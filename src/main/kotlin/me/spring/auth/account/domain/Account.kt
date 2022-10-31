@@ -7,7 +7,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 
 @Entity
-open class Account protected constructor() {
+open class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
@@ -19,4 +19,7 @@ open class Account protected constructor() {
     val count: Int? = null
     val lastLoginTime: LocalDateTime? = null
     val createTime: LocalDateTime? = null
+    protected constructor()
+
+    constructor(userId: String, password: String, name: String, email: String, phone: String)
 }
