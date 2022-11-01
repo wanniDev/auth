@@ -8,22 +8,19 @@ import org.springframework.stereotype.Component
 
 @Component
 class AccountProcessor(private val accountRepository: AccountRepositoryAdapter) {
-    fun processJoin(joinRequest: JoinRequest): Account = processJoin(joinRequest, object :
-        Commander<Account, JoinRequest> {
-        override fun command(arg: JoinRequest): Account {
-            val userId = arg.userId
-            val email = arg.email
-            if (isDuplicated(userId, email))
-                throw DuplicateMemberException("UserId [$userId], email [$email] already exisits..")
+    fun processJoin(joinRequest: JoinRequest): Account = processJoin(joinRequest) {
+        arg -> val userId = joinRequest.userId
+        val email = arg.email
+        if (isDuplicated(userId, email))
+            throw DuplicateMemberException("UserId [$userId], email [$email] already exisits..")
 
-            val account = Account(arg.userId, arg.credential, arg.name, arg.email, arg.phone)
+        val account = Account(arg.userId, arg.credential, arg.name, arg.email, arg.phone)
 
-            return accountRepository.save(account)
-        }
-    })
+        accountRepository.save(account)
+    }
 
-    private fun processJoin(joinRequest: JoinRequest, commander: Commander<Account, JoinRequest>): Account {
-        return commander.command(joinRequest);
+    private fun processJoin(joinRequest: JoinRequest, commander:(JoinRequest) -> Account): Account {
+        return commander.invoke(joinRequest)
     }
 
     private fun isDuplicated(userId: String, email: String): Boolean =
