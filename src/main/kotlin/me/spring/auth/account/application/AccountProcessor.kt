@@ -4,7 +4,9 @@ import me.spring.auth.account.domain.Account
 import me.spring.auth.account.presentation.request.JoinRequest
 import me.spring.auth.common.Commander
 import me.spring.auth.exception.DuplicateMemberException
+import org.springframework.stereotype.Component
 
+@Component
 class AccountProcessor(private val accountRepository: AccountRepositoryAdapter) {
     fun processJoin(joinRequest: JoinRequest): Account = processJoin(joinRequest, object :
         Commander<Account, JoinRequest> {
@@ -15,6 +17,7 @@ class AccountProcessor(private val accountRepository: AccountRepositoryAdapter) 
                 throw DuplicateMemberException("UserId [$userId], email [$email] already exisits..")
 
             val account = Account(arg.userId, arg.credential, arg.name, arg.email, arg.phone)
+
             return accountRepository.save(account)
         }
     })

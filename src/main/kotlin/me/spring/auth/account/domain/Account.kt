@@ -7,19 +7,31 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 
 @Entity
-open class Account {
+class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
-    val userId: String? = null
-    val password: String? = null
-    val name: String? = null
-    val email: String? = null
-    val phone: String? = null
-    val count: Int? = null
-    val lastLoginTime: LocalDateTime? = null
-    val createTime: LocalDateTime? = null
+    var userId: String? = null
+    var password: String? = null
+    var name: String? = null
+    var email: String? = null
+    var phone: String? = null
+    var count: Int? = 0
+    var lastLoginTime: LocalDateTime? = null
+    val createTime: LocalDateTime? = LocalDateTime.now()
     protected constructor()
+    constructor(userId: String?, password: String?, name: String?, email: String?, phone: String?) {
+        this.userId = userId
+        this.password = password
+        this.name = name
+        this.email = email
+        this.phone = phone
+    }
 
-    constructor(userId: String, password: String, name: String, email: String, phone: String)
+
+    override fun toString(): String {
+        return "Account(id=$id, userId=$userId, password=$password, name=$name, email=$email, phone=$phone, count=$count, lastLoginTime=$lastLoginTime, createTime=$createTime)"
+    }
+
+
 }
