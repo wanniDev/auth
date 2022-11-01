@@ -20,6 +20,7 @@ class AccountProcessorTest {
         )
 
         assertThat(account.userId).isEqualTo(joinRequest.userId)
+        assertThat(account.name).isEqualTo(joinRequest.name)
         assertThat(account.email).isEqualTo(joinRequest.email)
         assertThat(account.phone).isEqualTo(joinRequest.phone)
     }

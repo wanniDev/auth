@@ -2,7 +2,6 @@ package me.spring.auth.account.application
 
 import me.spring.auth.account.domain.Account
 import me.spring.auth.account.presentation.request.JoinRequest
-import me.spring.auth.common.Commander
 import me.spring.auth.exception.DuplicateMemberException
 import org.springframework.stereotype.Component
 
