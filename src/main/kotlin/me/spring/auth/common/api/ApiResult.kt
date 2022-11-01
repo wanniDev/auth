@@ -9,7 +9,7 @@ class ApiResult<T>(val isSuccess: Boolean, val response: T, val error: ApiError?
             return ApiResult(true, response, null)
         }
 
-        fun ERROR(throwable: Throwable?, status: HttpStatus?): ApiResult<*> {
+        fun ERROR(throwable: Throwable, status: HttpStatus): ApiResult<*> {
             return ApiResult<Any?>(false, null, ApiError(throwable, status))
         }
     }
