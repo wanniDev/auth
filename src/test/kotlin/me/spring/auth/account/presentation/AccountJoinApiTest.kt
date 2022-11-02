@@ -55,5 +55,6 @@ internal class AccountJoinApiTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().is4xxClientError)
+            .andExpect(jsonPath("\$").isNotEmpty)
     }
 }
