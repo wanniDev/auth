@@ -18,5 +18,5 @@ class AccountJoinApi(private val accountFacade: AccountFacade) {
     fun join(@Valid @RequestBody joinRequest: JoinRequest): ApiResult<JoinResponse> {
         val account = accountFacade.join(joinRequest)
         return ApiResult.OK(JoinResponse(account))
-    };
+    }
 }
