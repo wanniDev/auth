@@ -4,9 +4,12 @@ import me.spring.auth.account.domain.Account
 import me.spring.auth.account.presentation.request.JoinRequest
 import me.spring.auth.exception.DuplicateMemberException
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 @Component
 class AccountProcessor(private val accountRepository: AccountRepositoryAdapter) {
+
+    @Transactional
     fun processJoin(joinRequest: JoinRequest): Account = processJoin(joinRequest) {
         arg -> val userId = joinRequest.userId
         val email = arg.email
