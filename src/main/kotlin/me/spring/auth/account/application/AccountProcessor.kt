@@ -21,7 +21,7 @@ class AccountProcessor(private val accountRepository: AccountRepositoryAdapter) 
         accountRepository.save(account)
     }
 
-    private fun processJoin(joinRequest: JoinRequest, commander:(JoinRequest) -> Account): Account {
+    private inline fun processJoin(joinRequest: JoinRequest, commander: (JoinRequest) -> Account): Account {
         return commander.invoke(joinRequest)
     }
 
