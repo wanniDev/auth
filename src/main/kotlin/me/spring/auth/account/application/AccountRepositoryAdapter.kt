@@ -13,9 +13,9 @@ class AccountRepositoryAdapter(private val jpaAccountRepository: JpaAccountRepos
     override fun save(account: Account): Account = jpaAccountRepository.save(account)
 
     override fun findById(id: Long): Account =
-        jpaAccountRepository.findAccountById(id) ?: throw NotFoundAccountException(AccountExceptionMsg.NOT_FOUND.msg)
+        jpaAccountRepository.findAccountById(id) ?: throw NotFoundAccountException()
     override fun findByUserId(userId: String): Account = jpaAccountRepository
-        .findByUserId(userId) ?: throw NotFoundAccountException(AccountExceptionMsg.NOT_FOUND.msg)
+        .findByUserId(userId) ?: throw NotFoundAccountException()
 
     override fun existByEmail(email: String): Boolean = jpaAccountRepository.existsByEmail(email)
 

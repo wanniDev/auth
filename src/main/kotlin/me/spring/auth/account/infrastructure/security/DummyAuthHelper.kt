@@ -10,4 +10,8 @@ class DummyAuthHelper : AuthHelper {
     override fun authenticate(account: Account): AuthToken {
         return DummyAuthToken(account)
     }
+
+    override fun passwdMatches(passwd1: String?, passwd2: String): Boolean {
+        return passwd1.equals(passwd2)
+    }
 }

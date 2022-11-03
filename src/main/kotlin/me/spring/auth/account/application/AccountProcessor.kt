@@ -4,6 +4,7 @@ import me.spring.auth.account.domain.Account
 import me.spring.auth.account.presentation.request.AuthRequest
 import me.spring.auth.account.presentation.request.AuthResponse
 import me.spring.auth.account.presentation.request.JoinRequest
+import me.spring.auth.exception.AccountAuthException
 import me.spring.auth.exception.DuplicateAccountException
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -33,7 +34,10 @@ class AccountProcessor(private val accountRepository: AccountRepositoryAdapter, 
     @Transactional
     fun processAuth(authRequest: AuthRequest): AuthResponse {
         val account = accountRepository.findByUserId(authRequest.userId)
-        val authToken = authHelper.authenticate(account)
-        return AuthResponse(authToken)
+        if (authHelper.passwdMatches(account.password, authRequest.password)) {
+            val authToken = authHelper.authenticate(account)
+            return AuthResponse(authToken)
+        }
+        throw AccountAuthException()
     }
 }
