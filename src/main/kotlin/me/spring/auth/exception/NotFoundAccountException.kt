@@ -1,3 +1,6 @@
 package me.spring.auth.exception
 
-class NotFoundAccountException(message: String?) : RuntimeException(message)
+class NotFoundAccountException : RuntimeException {
+    constructor() : super(AccountExceptionMsg.NOT_FOUND.msg)
+    constructor(message: String?) : super(message)
+}
