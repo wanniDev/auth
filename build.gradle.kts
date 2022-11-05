@@ -31,6 +31,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("com.auth0:java-jwt:4.2.1")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
     compileOnly("org.projectlombok:lombok")
