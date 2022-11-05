@@ -13,21 +13,17 @@ import org.springframework.transaction.annotation.Transactional
 class AccountProcessor(private val accountRepository: AccountRepositoryAdapter, private val authHelper: AuthHelper) {
 
     @Transactional
-    fun processJoin(joinRequest: JoinRequest): Account = processJoin(joinRequest, confirmJoinWith(joinRequest))
-
-    private fun confirmJoinWith(joinRequest: JoinRequest) = { arg: JoinRequest ->
+    fun processJoin(joinRequest: JoinRequest): Account {
         val userId = joinRequest.userId
-            val email = arg.email
-            if (isDuplicated(userId, email))
-                throw DuplicateAccountException("UserId [$userId], email [$email] already exisits..")
+        val email = joinRequest.email
+        if (isDuplicated(userId, email))
+            throw DuplicateAccountException("UserId [$userId], email [$email] already exisits..")
 
-            val account = Account(arg.userId, arg.credential, arg.name, arg.email, arg.phone)
+        val account = Account(joinRequest.userId, joinRequest.credential, joinRequest.name, joinRequest.email, joinRequest.phone)
 
-            accountRepository.save(account)
-        }
-    private inline fun processJoin(joinRequest: JoinRequest, commander: (JoinRequest) -> Account): Account {
-        return commander.invoke(joinRequest)
+        return accountRepository.save(account)
     }
+
     private fun isDuplicated(userId: String, email: String): Boolean =
         accountRepository.existByUserId(userId) && accountRepository.existByEmail(email)
 
