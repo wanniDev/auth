@@ -14,15 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 // TODO AccountProcessor 추상화
 @Component
 class AccountProcessor(private val accountRepository: AccountRepositoryAdapter,
-                       private val authHelper: AuthHelper) {
-    @Value("\${jwt.token.issuer}")
-    private lateinit var issuer :String
-
-    @Value("\${jwt.token.clientSecret}")
-    private lateinit var clientSecret: String
-
-    @Value("\${jwt.token.expirySeconds}")
-    private var expirySeconds: Int ?= 0
+                       private val authHelper: AuthHelper, private val jwt: JWT) {
 
     @Transactional
     fun processJoin(joinRequest: JoinRequest): Account {
@@ -34,9 +26,8 @@ class AccountProcessor(private val accountRepository: AccountRepositoryAdapter,
         val account = Account(joinRequest.userId, joinRequest.credential, joinRequest.name, joinRequest.email, joinRequest.phone)
         val result = accountRepository.save(account)
         // TODO jwt 추상화
-        val jwt = JWT(issuer, clientSecret, expirySeconds)
         val newToken = jwt.newToken(JWT.Claims.of(result.id, result.name, result.email, arrayOf("ROLE_USER")))
-
+        println(newToken)
         return result
     }
 

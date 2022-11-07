@@ -5,10 +5,10 @@ import org.springframework.stereotype.Component
 
 @Component
 @ConfigurationProperties(prefix = "jwt.token")
-class JWTConfigure {
-    var header: String? = null
-    var issuer: String? = null
-    var clientSecret: String? = null
+class JWTProperty {
+    lateinit var header: String
+    lateinit var issuer: String
+    lateinit var clientSecret: String
     var expirySeconds = 0
     override fun toString(): String {
         return "JWTConfigure{" +
