@@ -18,8 +18,8 @@ class AccountApi(private val accountFacade: AccountFacade) {
 
     @PostMapping("v1/account/join")
     fun join(@Valid @RequestBody joinRequest: JoinRequest): ApiResult<JoinResponse> {
-        val account = accountFacade.join(joinRequest)
-        return ApiResult.OK(JoinResponse(account))
+        val joinResponse = accountFacade.join(joinRequest)
+        return ApiResult.OK(joinResponse)
     }
 
     @PostMapping("v1/account/auth")
