@@ -3,7 +3,6 @@ package me.spring.auth.account.infrastructure.jwt
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 
-@Component
 @ConfigurationProperties(prefix = "jwt.token")
 class JWTProperty {
     lateinit var header: String

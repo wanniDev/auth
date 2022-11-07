@@ -20,4 +20,6 @@ class AccountRepositoryAdapter(private val jpaAccountRepository: JpaAccountRepos
     override fun existByEmail(email: String): Boolean = jpaAccountRepository.existsByEmail(email)
 
     override fun existByUserId(userId: String): Boolean = jpaAccountRepository.existsByUserId(userId)
+    override fun findByEmail(email: String): Account =
+        jpaAccountRepository.findByEmail(email) ?: throw NotFoundAccountException()
 }

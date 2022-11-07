@@ -6,5 +6,5 @@ import org.springframework.stereotype.Component
 
 interface AuthHelper {
     fun authenticate(account: Account) :AuthToken
-    fun passwdMatches(passwd1: String?, passwd2: String): Boolean
+    fun passwdMatches(raw: String?, encoded: String?): Boolean
 }

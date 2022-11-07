@@ -4,11 +4,11 @@ import me.spring.auth.account.application.AuthToken
 
 class AuthResponse {
 
-    private var session: AuthToken? = null
+    private var session: Any? = null
 
     private constructor()
 
-    constructor(session: AuthToken) {
+    constructor(session: Any) {
         this.session = session
     }
 }
