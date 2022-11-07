@@ -8,8 +8,8 @@ import me.spring.auth.exception.AccountAuthException
 import me.spring.auth.exception.DuplicateAccountException
 
 
-class DefaultAccountProcessor(private val accountRepository: AccountRepositoryAdapter,
-                                       private val authHelper: AuthHelper, private val joinHelper: JoinHelper): AccountProcessor {
+class DummyAccountProcessor(private val accountRepository: AccountRepositoryAdapter,
+                            private val authHelper: AuthHelper, private val joinHelper: JoinHelper): AccountProcessor {
 
     override fun processJoin(joinRequest: JoinRequest): JoinResponse {
         val email = joinRequest.email
