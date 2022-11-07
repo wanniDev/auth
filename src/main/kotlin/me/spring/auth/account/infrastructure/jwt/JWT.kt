@@ -7,7 +7,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException
 import com.auth0.jwt.interfaces.DecodedJWT
 import java.util.Date
 
-class JWT(val issuer: String, val clientSecret: String, val expirySeconds: Int?) {
+class JWT(private val issuer: String, private val clientSecret: String, private val expirySeconds: Int?) {
 
     private val algorithm: Algorithm = Algorithm.HMAC512(clientSecret)
     private val jwtVerifier: JWTVerifier = JWT.require(algorithm)
@@ -80,6 +80,10 @@ class JWT(val issuer: String, val clientSecret: String, val expirySeconds: Int?)
             exp = null
         }
 
+        override fun toString(): String {
+            return "Claims(accountKey=$accountKey, name=$name, email=$email, roles=${roles?.contentToString()}, iat=$iat, exp=$exp)"
+        }
+
         companion object {
             fun of(userKey: Long?, name: String?, email: String?, roles: Array<String>): Claims {
                 val claims = Claims()
@@ -90,5 +94,7 @@ class JWT(val issuer: String, val clientSecret: String, val expirySeconds: Int?)
                 return claims
             }
         }
+
+
     }
 }

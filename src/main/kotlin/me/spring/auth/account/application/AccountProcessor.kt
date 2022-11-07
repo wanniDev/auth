@@ -7,7 +7,6 @@ import me.spring.auth.account.presentation.request.AuthResponse
 import me.spring.auth.account.presentation.request.JoinRequest
 import me.spring.auth.exception.AccountAuthException
 import me.spring.auth.exception.DuplicateAccountException
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -23,12 +22,9 @@ class AccountProcessor(private val accountRepository: AccountRepositoryAdapter,
         if (isDuplicated(userId, email))
             throw DuplicateAccountException("UserId [$userId], email [$email] already exisits..")
 
-        val account = Account(joinRequest.userId, joinRequest.credential, joinRequest.name, joinRequest.email, joinRequest.phone)
-        val result = accountRepository.save(account)
-        // TODO jwt 추상화
-        val newToken = jwt.newToken(JWT.Claims.of(result.id, result.name, result.email, arrayOf("ROLE_USER")))
-        println(newToken)
-        return result
+        val account =
+            Account(joinRequest.userId, joinRequest.credential, joinRequest.name, joinRequest.email, joinRequest.phone)
+        return accountRepository.save(account)
     }
 
     private fun isDuplicated(userId: String, email: String): Boolean =
