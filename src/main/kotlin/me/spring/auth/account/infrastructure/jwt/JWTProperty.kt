@@ -9,12 +9,9 @@ class JWTProperty {
     lateinit var issuer: String
     lateinit var clientSecret: String
     var expirySeconds = 0
+    var refreshSeconds = 0
     override fun toString(): String {
-        return "JWTConfigure{" +
-                "header='" + header + '\'' +
-                ", issuer='" + issuer + '\'' +
-                ", clientSecret='" + clientSecret + '\'' +
-                ", expirySeconds=" + expirySeconds +
-                '}'
+        return "JWTProperty(header='$header', issuer='$issuer', clientSecret='$clientSecret', expirySeconds=$expirySeconds, refreshSeconds=$refreshSeconds)"
     }
+
 }

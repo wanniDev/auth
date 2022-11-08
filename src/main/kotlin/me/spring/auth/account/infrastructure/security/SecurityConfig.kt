@@ -46,24 +46,11 @@ class SecurityConfig {
 
     @Bean
     fun jwtAuthenticationTokenFilter(): JwtAuthenticationTokenFilter {
-        return JwtAuthenticationTokenFilter(jwtProperty().header, jwt())
+        return JwtAuthenticationTokenFilter(jwtProperty(), jwt())
     }
 
     @Bean
     fun filterChain(http: HttpSecurity, authenticationManager: AuthenticationManager): SecurityFilterChain {
-//        httpSecurity
-//            .csrf()
-//            .disable()
-//            .sessionManagement()
-//            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//            .and()
-//            .authorizeRequests()
-//            .antMatchers("/api/v1/account/auth", "/api/v1/account/join")
-//            .permitAll()
-//            .and()
-//            .formLogin()
-//            .disable()
-//            .build()
         http.csrf().disable()
 
         http.authorizeRequests().antMatchers("/api/v1/account/auth", "/api/v1/account/join").permitAll()
@@ -71,6 +58,8 @@ class SecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
         http.authenticationManager(authenticationManager)
+
+        http.formLogin().disable()
 
         return http.build()
     }
