@@ -34,7 +34,7 @@ class JWTAccountProcessor(private val accountRepository: AccountRepositoryAdapte
         val account = accountRepository.findByEmail(authRequest.email)
         if (authHelper.passwdMatches(authRequest.password, account.password)) {
             val authToken = authHelper.authenticate(account) as JwtAuthenticationToken
-            return AuthResponse(authToken.details)
+            return authToken.details as AuthResponse
         }
         throw BadCredentialsException(AccountExceptionMsg.AUTH_FAIL.msg)
     }
