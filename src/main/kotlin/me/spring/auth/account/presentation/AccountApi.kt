@@ -1,11 +1,16 @@
 package me.spring.auth.account.presentation
 
 import me.spring.auth.account.application.AccountFacade
+import me.spring.auth.account.infrastructure.security.JwtAuthenticationToken
 import me.spring.auth.account.presentation.request.AuthRequest
 import me.spring.auth.account.presentation.request.AuthResponse
 import me.spring.auth.account.presentation.request.JoinRequest
 import me.spring.auth.account.presentation.request.JoinResponse
 import me.spring.auth.common.api.ApiResult
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.http.ResponseEntity
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -14,7 +19,7 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("api")
-class AccountApi(private val accountFacade: AccountFacade) {
+class AccountApi(private val accountFacade: AccountFacade, @Qualifier("testManager") private val authenticationManager: AuthenticationManager) {
 
     @PostMapping("v1/account/join")
     fun join(@Valid @RequestBody joinRequest: JoinRequest): ApiResult<JoinResponse> {
@@ -27,5 +32,11 @@ class AccountApi(private val accountFacade: AccountFacade) {
         val auth = accountFacade.auth(authRequest)
         val ok = ApiResult.OK(auth)
         return ok;
+    }
+
+    @PostMapping("v1/account/admin/auth")
+    fun test(): ResponseEntity<Long> {
+        authenticationManager.authenticate(JwtAuthenticationToken("test", "test"))
+        return ResponseEntity.ok(System.currentTimeMillis())
     }
 }

@@ -2,7 +2,9 @@ package me.spring.auth.account.infrastructure.security
 
 import me.spring.auth.account.infrastructure.jwt.JWT
 import me.spring.auth.account.infrastructure.jwt.JWTProperty
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Primary
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
@@ -12,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
@@ -38,6 +41,7 @@ class SecurityConfig {
     }
 
     @Bean
+    @Primary
     fun authenticationManager(http: HttpSecurity): AuthenticationManager {
         val authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder::class.java)
         authenticationManagerBuilder.authenticationProvider(jwtAuthenticationProvider())
@@ -50,17 +54,45 @@ class SecurityConfig {
     }
 
     @Bean
+    @Qualifier("testManager")
+    fun testManager(http: HttpSecurity): AuthenticationManager {
+        val authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder::class.java)
+        authenticationManagerBuilder.authenticationProvider(adminAuthenticationProvider())
+        return authenticationManagerBuilder.build()
+    }
+
+
+    @Bean
+    fun adminAuthenticationProvider(): AdminAuthenticationProvider {
+        return AdminAuthenticationProvider()
+    }
+    //
+    @Bean
+    fun adminFilterChain(http: HttpSecurity, @Qualifier("testManager") testManager: AuthenticationManager): SecurityFilterChain {
+        http.csrf().disable()
+
+        http.authorizeRequests().antMatchers("/api/v1/account/admin/auth").permitAll()
+
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http.authenticationManager(testManager)
+        http.authenticationProvider(adminAuthenticationProvider()).authorizeRequests()
+
+        http.formLogin().disable()
+        return http.build()
+    }
+
+    @Bean
     fun filterChain(http: HttpSecurity, authenticationManager: AuthenticationManager): SecurityFilterChain {
         http.csrf().disable()
 
         http.authorizeRequests().antMatchers("/api/v1/account/auth", "/api/v1/account/join").permitAll()
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
         http.authenticationManager(authenticationManager)
+        http.authenticationProvider(jwtAuthenticationProvider()).authorizeRequests()
 
         http.formLogin().disable()
-
+        http.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter::class.java)
         return http.build()
     }
 }
