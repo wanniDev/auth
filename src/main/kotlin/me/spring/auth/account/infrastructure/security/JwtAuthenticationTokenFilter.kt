@@ -43,7 +43,7 @@ class JwtAuthenticationTokenFilter(private val jwtProperty: JWTProperty, private
 
                     if (name.isNotEmpty() && email.isNotEmpty() && authorities.isNotEmpty()) {
                         val auth =
-                            JwtAuthenticationToken(AuthId(accountKey, name, email), null, authorities)
+                            JwtAuthenticationToken(AuthInfo(accountKey, name, email), null, authorities)
                         auth.details = WebAuthenticationDetailsSource().buildDetails(request)
                         SecurityContextHolder.getContext().authentication = auth
                     }
