@@ -54,8 +54,8 @@ class SecurityConfig {
     }
 
     @Bean
-    @Qualifier("testManager")
-    fun testManager(http: HttpSecurity): AuthenticationManager {
+    @Qualifier("adminAuthenticationManager")
+    fun adminAuthenticationManager(http: HttpSecurity): AuthenticationManager {
         val authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder::class.java)
         authenticationManagerBuilder.authenticationProvider(adminAuthenticationProvider())
         return authenticationManagerBuilder.build()
@@ -68,13 +68,13 @@ class SecurityConfig {
     }
     //
     @Bean
-    fun adminFilterChain(http: HttpSecurity, @Qualifier("testManager") testManager: AuthenticationManager): SecurityFilterChain {
+    fun adminFilterChain(http: HttpSecurity, @Qualifier("adminAuthenticationManager") authenticationManager: AuthenticationManager): SecurityFilterChain {
         http.csrf().disable()
 
         http.authorizeRequests().antMatchers("/api/v1/account/admin/auth").permitAll()
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        http.authenticationManager(testManager)
+        http.authenticationManager(authenticationManager)
         http.authenticationProvider(adminAuthenticationProvider()).authorizeRequests()
 
         http.formLogin().disable()

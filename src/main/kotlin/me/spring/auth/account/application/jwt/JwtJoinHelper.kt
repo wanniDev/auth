@@ -4,9 +4,11 @@ import me.spring.auth.account.application.JoinHelper
 import me.spring.auth.account.domain.Account
 import me.spring.auth.account.infrastructure.jwt.JWT
 import me.spring.auth.account.presentation.request.JoinRequest
+import org.springframework.context.annotation.Primary
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 
+@Primary
 @Component
 class JwtJoinHelper(private val passwordEncoder: PasswordEncoder, private val jwt: JWT): JoinHelper {
     override fun produceNewAccount(joinRequest: JoinRequest): Account {
