@@ -1,13 +1,11 @@
 package me.spring.auth.account.presentation
 
-import me.spring.auth.account.application.jwt.JwtAccountFacade
+import me.spring.auth.account.application.admin.AdminAccountFacade
 import me.spring.auth.account.presentation.request.AuthRequest
 import me.spring.auth.account.presentation.request.AuthResponse
 import me.spring.auth.account.presentation.request.JoinRequest
 import me.spring.auth.account.presentation.request.JoinResponse
 import me.spring.auth.common.api.ApiResult
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -16,18 +14,16 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("api")
-class AccountApi(private val jwtAccountFacade: JwtAccountFacade, @Qualifier("adminAuthenticationManager") private val authenticationManager: AuthenticationManager) {
-
-    @PostMapping("v1/account/join")
+class AdminApi(private val adminAccountFacade: AdminAccountFacade) {
+    @PostMapping("v1/account/admin/join")
     fun join(@Valid @RequestBody joinRequest: JoinRequest): ApiResult<JoinResponse> {
-        val joinResponse = jwtAccountFacade.join(joinRequest)
+        val joinResponse = adminAccountFacade.join(joinRequest)
         return ApiResult.OK(joinResponse)
     }
 
-    @PostMapping("v1/account/auth")
+    @PostMapping("v1/account/admin/auth")
     fun auth(@Valid @RequestBody authRequest: AuthRequest): ApiResult<AuthResponse> {
-        val auth = jwtAccountFacade.auth(authRequest)
-        val ok = ApiResult.OK(auth)
-        return ok;
+        val auth = adminAccountFacade.auth(authRequest)
+        return ApiResult.OK(auth);
     }
 }

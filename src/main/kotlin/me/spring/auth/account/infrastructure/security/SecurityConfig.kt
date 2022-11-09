@@ -64,7 +64,7 @@ class SecurityConfig {
 
     @Bean
     fun adminAuthenticationProvider(): AdminAuthenticationProvider {
-        return AdminAuthenticationProvider()
+        return AdminAuthenticationProvider(jwt())
     }
     //
     @Bean
