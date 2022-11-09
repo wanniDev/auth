@@ -46,7 +46,7 @@ class JWT(private val issuer: String, private val clientSecret: String, private 
         var accountKey: Long ?= null
         var name: String ?= null
         var email: String ?= null
-        var roles: Array<String> ?= null
+        var roles: Array<out String?> ?= null
         var iat: Date ?= null
         var exp: Date ?= null
 
@@ -85,7 +85,7 @@ class JWT(private val issuer: String, private val clientSecret: String, private 
         }
 
         companion object {
-            fun of(userKey: Long?, name: String?, email: String?, roles: Array<String>): Claims {
+            fun of(userKey: Long?, name: String?, email: String?, roles: Array<out String?>): Claims {
                 val claims = Claims()
                 claims.accountKey = userKey
                 claims.name = name
