@@ -19,9 +19,9 @@ class JWTAccountProcessor(private val accountRepository: AccountRepositoryAdapte
     @Transactional
     override fun processJoin(joinRequest: JoinRequest): JoinResponse {
         val email = joinRequest.email
-        if (accountRepository.existByEmail(email)) {
-            throw DuplicateAccountException()
-        }
+
+        joinHelper.checkDuplicated(accountRepository.existByEmail(email))
+
         val newAccount = joinHelper.produceNewAccount(joinRequest)
         val savedAccount = accountRepository.save(newAccount)
         val token = joinHelper.produceNewToken(savedAccount)
