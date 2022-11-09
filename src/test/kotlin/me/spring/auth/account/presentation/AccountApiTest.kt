@@ -2,17 +2,18 @@ package me.spring.auth.account.presentation
 
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import me.spring.auth.account.application.AccountProcessor
 import me.spring.auth.account.application.AccountRepositoryAdapter
-import me.spring.auth.account.domain.Account
+import me.spring.auth.account.application.JoinHelper
 import me.spring.auth.account.presentation.request.AuthRequest
 import me.spring.auth.account.presentation.request.JoinRequest
 import me.spring.auth.common.MockMvcTest
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
@@ -25,14 +26,8 @@ internal class AccountApiTest {
     private lateinit var mockMvc: MockMvc
 
     @Autowired
-    private lateinit var accountRepositoryAdapter: AccountRepositoryAdapter
-
-    private lateinit var dummy: Account
-
-    @BeforeEach
-    fun dummyAccount() {
-        dummy = accountRepositoryAdapter.save(Account("dummy123", "AQQwerDfd234#$%#4fj", "dummy", "dummy123@qwer.com", "010-234-5678"))
-    }
+    @Qualifier("jwtAccountProcessor")
+    private lateinit var accountProcessor: AccountProcessor
 
     @Test
     @DisplayName("회원가입시 비밀번호는 영문 대소문자+특수문자+숫자가 포함되어야 한다.")
@@ -73,10 +68,14 @@ internal class AccountApiTest {
     @DisplayName("로그인 테스트")
     @Throws(Exception::class)
     fun login() {
-        val userId = dummy.userId ?: ""
-        val password = dummy.password ?: ""
+        val joinRequest = JoinRequest("dummy123", "AQQwerDfd234#$%#4fj", "dummy", "dummy123@qwer.com", "010-234-5678")
 
-        val authRequest = AuthRequest(userId, password)
+        accountProcessor.processJoin(joinRequest)
+
+        val email = joinRequest.email
+        val credential = joinRequest.credential
+
+        val authRequest = AuthRequest(email, credential)
         val reqBody = jacksonObjectMapper().writeValueAsString(authRequest)
 
         mockMvc.perform(post("/api/v1/account/auth").content(reqBody)
@@ -90,7 +89,7 @@ internal class AccountApiTest {
     @DisplayName("로그인 실패")
     @Throws(Exception::class)
     fun login_fail() {
-        val userId = dummy.userId ?: ""
+        val userId = "dummy123@qwer.com"
 
         val authRequest = AuthRequest(userId, "wrongPasswd")
         val reqBody = jacksonObjectMapper().writeValueAsString(authRequest)
