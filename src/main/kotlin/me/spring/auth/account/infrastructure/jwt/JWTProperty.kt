@@ -1,7 +1,6 @@
 package me.spring.auth.account.infrastructure.jwt
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.stereotype.Component
 
 @ConfigurationProperties(prefix = "jwt.token")
 class JWTProperty {

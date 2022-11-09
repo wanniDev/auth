@@ -2,7 +2,6 @@ package me.spring.auth.account.infrastructure.jpa
 
 import me.spring.auth.account.domain.Account
 import org.springframework.data.jpa.repository.JpaRepository
-import java.util.Optional
 
 interface JpaAccountRepository : JpaRepository<Account?, Long?> {
 

@@ -1,26 +1,22 @@
 package me.spring.auth.account.presentation
 
-import com.fasterxml.jackson.databind.ObjectMapper
+
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import me.spring.auth.account.application.AccountRepositoryAdapter
 import me.spring.auth.account.domain.Account
 import me.spring.auth.account.presentation.request.AuthRequest
 import me.spring.auth.account.presentation.request.JoinRequest
 import me.spring.auth.common.MockMvcTest
-import org.junit.jupiter.api.Test
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Assertions.*
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-
-
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
 @MockMvcTest
 internal class AccountApiTest {

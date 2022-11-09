@@ -4,7 +4,6 @@ import me.spring.auth.account.application.AccountProcessor
 import me.spring.auth.account.application.AccountRepositoryAdapter
 import me.spring.auth.account.application.AuthHelper
 import me.spring.auth.account.application.JoinHelper
-import me.spring.auth.account.infrastructure.security.Role
 import me.spring.auth.account.presentation.request.AuthRequest
 import me.spring.auth.account.presentation.request.AuthResponse
 import me.spring.auth.account.presentation.request.JoinRequest
