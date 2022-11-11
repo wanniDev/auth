@@ -3,6 +3,8 @@ package me.spring.auth.account.application.jwt
 import me.spring.auth.account.application.AuthBlockManager
 import me.spring.auth.account.application.AuthHelper
 import me.spring.auth.account.application.AuthToken
+import me.spring.auth.account.application.email.EmailMessage
+import me.spring.auth.account.application.email.EmailSender
 import me.spring.auth.account.domain.Account
 import me.spring.auth.account.domain.Id
 import me.spring.auth.account.infrastructure.security.AuthInfo
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Component
 class JWTAuthHelper(private val authenticationManager: AuthenticationManager,
                     private val authBlockManager: AuthBlockManager<Long>,
                     private val passwordEncoder: PasswordEncoder,
-
+                    private val emailSender: EmailSender
                     ): AuthHelper {
     override fun authenticate(account: Account): AuthToken {
         val authToken = JwtAuthenticationToken(account, "")
@@ -30,6 +32,10 @@ class JWTAuthHelper(private val authenticationManager: AuthenticationManager,
 
     override fun passwdMatches(raw: String?, encoded: String?): Boolean {
         return passwordEncoder.matches(raw, encoded)
+    }
+
+    override fun validateMail(emailMessage: EmailMessage) {
+        emailSender.send(emailMessage)
     }
 
     override fun invalidate(id: Long): Boolean {
