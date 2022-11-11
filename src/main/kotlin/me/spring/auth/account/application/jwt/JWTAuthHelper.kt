@@ -36,6 +36,6 @@ class JWTAuthHelper(private val authenticationManager: AuthenticationManager,
         if(!authBlockManager.existsById(id)) {
             return authBlockManager.add(id)
         }
-        throw NotFoundAccountException("Cannot identified with $id...")
+        throw NotFoundAccountException("Already invalidated token...")
     }
 }
