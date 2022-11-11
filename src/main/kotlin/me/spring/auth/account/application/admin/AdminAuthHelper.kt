@@ -23,4 +23,8 @@ class AdminAuthHelper(@Qualifier("adminAuthenticationManager") private val authe
     override fun passwdMatches(raw: String?, encoded: String?): Boolean {
         return passwordEncoder.matches(raw, encoded)
     }
+
+    override fun invalidate(id: Long): Boolean {
+        TODO("Not yet implemented")
+    }
 }

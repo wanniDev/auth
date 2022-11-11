@@ -10,6 +10,7 @@ import me.spring.auth.account.presentation.request.AuthResponse
 import me.spring.auth.account.presentation.request.JoinRequest
 import me.spring.auth.account.presentation.request.JoinResponse
 import me.spring.auth.exception.AccountExceptionMsg
+import me.spring.auth.exception.NotFoundAccountException
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Primary
 import org.springframework.security.authentication.BadCredentialsException
@@ -20,7 +21,8 @@ import org.springframework.transaction.annotation.Transactional
 @Primary
 @Qualifier("jwtAccountProcessor")
 class JwtAccountProcessor(private val accountRepository: AccountRepositoryAdapter,
-                          private val authHelper: AuthHelper, @Qualifier("jwtJoinHelper") private val joinHelper: JoinHelper
+                          private val authHelper: AuthHelper,
+                          @Qualifier("jwtJoinHelper") private val joinHelper: JoinHelper
 ): AccountProcessor {
     @Transactional
     override fun processJoin(joinRequest: JoinRequest): JoinResponse {
@@ -40,5 +42,13 @@ class JwtAccountProcessor(private val accountRepository: AccountRepositoryAdapte
             return authToken.details as AuthResponse
         }
         throw BadCredentialsException(AccountExceptionMsg.AUTH_FAIL.msg)
+    }
+
+    @Transactional
+    override fun invalidate(id: Long): Boolean {
+        if (accountRepository.existById(id)) {
+            return authHelper.invalidate(id)
+        }
+        throw NotFoundAccountException()
     }
 }
