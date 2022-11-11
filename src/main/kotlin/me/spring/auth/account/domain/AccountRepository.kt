@@ -7,4 +7,5 @@ interface AccountRepository {
     fun existByEmail(email: String): Boolean
     fun existByUserId(userId: String): Boolean
     fun findByEmail(email: String): Account
+    fun existById(id: Long): Boolean
 }

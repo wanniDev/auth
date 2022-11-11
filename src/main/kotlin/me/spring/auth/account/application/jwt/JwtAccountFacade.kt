@@ -10,4 +10,6 @@ class JwtAccountFacade(private val processor: AccountProcessor) {
     fun join(joinRequest: JoinRequest) = processor.processJoin(joinRequest)
 
     fun auth(authRequest: AuthRequest) = processor.processAuth(authRequest)
+
+    fun logOut(id: Long) = processor.invalidate(id)
 }

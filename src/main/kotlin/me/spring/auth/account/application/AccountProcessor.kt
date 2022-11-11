@@ -8,4 +8,5 @@ import me.spring.auth.account.presentation.request.JoinResponse
 interface AccountProcessor {
     fun processJoin(joinRequest: JoinRequest): JoinResponse
     fun processAuth(authRequest: AuthRequest): AuthResponse
+    fun invalidate(id: Long): Boolean
 }

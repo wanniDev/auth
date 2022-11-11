@@ -10,6 +10,7 @@ import me.spring.auth.account.presentation.request.AuthResponse
 import me.spring.auth.account.presentation.request.JoinRequest
 import me.spring.auth.account.presentation.request.JoinResponse
 import me.spring.auth.exception.AccountExceptionMsg
+import me.spring.auth.exception.NotFoundAccountException
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.stereotype.Component
@@ -34,5 +35,12 @@ class AdminAccountProcessor(private val accountRepository: AccountRepositoryAdap
             return authToken.details as AuthResponse
         }
         throw BadCredentialsException(AccountExceptionMsg.AUTH_FAIL.msg)
+    }
+
+    override fun invalidate(id: Long): Boolean {
+        if (accountRepository.existById(id)) {
+            return authHelper.invalidate(id)
+        }
+        throw NotFoundAccountException()
     }
 }
