@@ -5,6 +5,9 @@ import me.spring.auth.account.infrastructure.jwt.JWTProperty
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
+import org.springframework.security.access.AccessDecisionManager
+import org.springframework.security.access.AccessDecisionVoter
+import org.springframework.security.access.vote.UnanimousBased
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
@@ -14,7 +17,11 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.access.expression.WebExpressionVoter
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.util.matcher.RegexRequestMatcher
+import org.springframework.security.web.util.matcher.RequestMatcher
+import java.util.regex.Pattern
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
@@ -54,6 +61,22 @@ class SecurityConfig {
     }
 
     @Bean
+    fun accessDecisionManager(): AccessDecisionManager {
+        val decisionVoters: MutableList<AccessDecisionVoter<*>> = ArrayList()
+        decisionVoters.add(WebExpressionVoter())
+        decisionVoters.add(uriBasedVoter())
+        // 모든 voter가 승인해야 한다.
+        return UnanimousBased(decisionVoters)
+    }
+
+    private fun uriBasedVoter(): UriBaseVoter {
+        val regex = "^/api/v1/account/[a-zA-z\\d]*"
+        val pattern = Pattern.compile(regex)
+        val requiresAuthorizationRequestMatcher: RequestMatcher = RegexRequestMatcher(pattern.pattern(), null)
+        return UriBaseVoter(requiresAuthorizationRequestMatcher)
+    }
+
+    @Bean
     @Qualifier("adminAuthenticationManager")
     fun adminAuthenticationManager(http: HttpSecurity): AuthenticationManager {
         val authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder::class.java)
@@ -61,35 +84,24 @@ class SecurityConfig {
         return authenticationManagerBuilder.build()
     }
 
-
     @Bean
     fun adminAuthenticationProvider(): AdminAuthenticationProvider {
         return AdminAuthenticationProvider(jwt())
     }
-    //
-    @Bean
-    fun adminFilterChain(http: HttpSecurity, @Qualifier("adminAuthenticationManager") authenticationManager: AuthenticationManager): SecurityFilterChain {
-        http.csrf().disable()
-
-        http.authorizeRequests().antMatchers("/api/v1/account/admin/auth").permitAll()
-
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        http.authenticationManager(authenticationManager)
-        http.authenticationProvider(adminAuthenticationProvider()).authorizeRequests()
-
-        http.formLogin().disable()
-        return http.build()
-    }
 
     @Bean
-    fun filterChain(http: HttpSecurity, authenticationManager: AuthenticationManager): SecurityFilterChain {
+    fun filterChain(http: HttpSecurity, defaultAuthManager: AuthenticationManager, @Qualifier("adminAuthenticationManager") adminAuthManager: AuthenticationManager): SecurityFilterChain {
         http.csrf().disable()
-
-        http.authorizeRequests().antMatchers("/api/v1/account/auth", "/api/v1/account/join").permitAll()
+        http.headers().disable()
+        http.authorizeRequests()
+            .antMatchers("/api/v1/account/logout")
+            .hasRole(Role.USER.value)
+//            .accessDecisionManager(accessDecisionManager())
+            .anyRequest().permitAll()
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        http.authenticationManager(authenticationManager)
-        http.authenticationProvider(jwtAuthenticationProvider()).authorizeRequests()
+        http.authenticationManager(defaultAuthManager)
+        http.authenticationManager(adminAuthManager)
 
         http.formLogin().disable()
         http.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter::class.java)

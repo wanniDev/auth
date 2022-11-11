@@ -2,10 +2,12 @@ package me.spring.auth.account.infrastructure.security
 
 import me.spring.auth.account.infrastructure.jwt.JWT
 import me.spring.auth.account.infrastructure.jwt.JWTProperty
+import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
+import org.springframework.util.ClassUtils.isAssignable
 import org.springframework.web.filter.GenericFilterBean
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
@@ -23,7 +25,9 @@ class JwtAuthenticationTokenFilter(private val jwtProperty: JWTProperty, private
         val request = req as HttpServletRequest
         val response = res as HttpServletResponse
 
-        if (SecurityContextHolder.getContext().authentication == null) {
+        val authContext = SecurityContextHolder.getContext().authentication
+
+        if (authContext == null || isAssignable(AnonymousAuthenticationToken::class.java, authContext.javaClass)) {
             val currToken = obtainAuthTokenFrom(req)
             if (currToken != null) {
                 try {
