@@ -33,6 +33,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("com.auth0:java-jwt:4.2.1")
     implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation("com.google.zxing:javase:3.5.1")
+    implementation("de.taimos:totp:1.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
     compileOnly("org.projectlombok:lombok")

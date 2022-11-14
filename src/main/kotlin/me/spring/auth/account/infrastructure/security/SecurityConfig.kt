@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.access.expression.WebExpressionVoter
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
@@ -28,8 +29,17 @@ import java.util.regex.Pattern
 class SecurityConfig {
 
     @Bean
+    @Primary
     fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
+    }
+
+    @Bean
+    @Qualifier("otpUserKeyEncoder")
+    fun otpUserKeyEncoder(): PasswordEncoder {
+        val pbkdf2PasswordEncoder = Pbkdf2PasswordEncoder()
+        pbkdf2PasswordEncoder.setAlgorithm(Pbkdf2PasswordEncoder.SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256)
+        return pbkdf2PasswordEncoder
     }
 
     @Bean
