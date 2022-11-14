@@ -17,7 +17,7 @@ class EmailApi(private val emailFacade: EmailFacade) {
     }
 
     @GetMapping("v1/email/valid")
-    fun checkEmail(email: String, token: String) {
-        println("email: $email, token: $token")
+    fun checkEmail(token: String, email: String): ResponseEntity<Boolean> {
+        return ResponseEntity.ok(emailFacade.getValidResult(token, email))
     }
 }

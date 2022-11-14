@@ -4,5 +4,6 @@ enum class ErrorMsg(val msg: String) {
     DUPLICATED("Duplicated Account detected..."),
     NOT_FOUND("Cannot find member..."),
     AUTH_FAIL("Wrong userId or password..."),
-    INVALID_EMAIL("Wrong email format input detected...")
+    INVALID_EMAIL("Wrong email format input detected..."),
+    INVALID_EMAIL_TOKEN("Invalid or cannot found email...")
 }
