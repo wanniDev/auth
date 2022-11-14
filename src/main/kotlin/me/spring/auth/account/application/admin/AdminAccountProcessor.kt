@@ -9,7 +9,7 @@ import me.spring.auth.account.presentation.request.AuthRequest
 import me.spring.auth.account.presentation.request.AuthResponse
 import me.spring.auth.account.presentation.request.JoinRequest
 import me.spring.auth.account.presentation.request.JoinResponse
-import me.spring.auth.exception.AccountExceptionMsg
+import me.spring.auth.exception.ErrorMsg
 import me.spring.auth.exception.NotFoundAccountException
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.security.authentication.BadCredentialsException
@@ -34,7 +34,7 @@ class AdminAccountProcessor(private val accountRepository: AccountRepositoryAdap
             val authToken = authHelper.authenticate(account) as JwtAuthenticationToken
             return authToken.details as AuthResponse
         }
-        throw BadCredentialsException(AccountExceptionMsg.AUTH_FAIL.msg)
+        throw BadCredentialsException(ErrorMsg.AUTH_FAIL.msg)
     }
 
     override fun invalidate(id: Long): Boolean {
