@@ -8,6 +8,8 @@ import me.spring.auth.account.application.AccountRepositoryAdapter
 import me.spring.auth.account.application.AccountTokenRepositoryAdapter
 import me.spring.auth.account.domain.AccountToken
 import me.spring.auth.account.infrastructure.security.AuthInfo
+import me.spring.auth.account.presentation.request.OTPRequest
+import me.spring.auth.exception.InvalidOTPCodeException
 import org.apache.commons.codec.binary.Base32
 import org.apache.commons.codec.binary.Hex
 import org.springframework.stereotype.Component
@@ -41,6 +43,15 @@ class OTPProcessor(
         val bos = ByteArrayOutputStream()
         MatrixToImageWriter.writeToStream(matrix, "png", bos)
         return bos.toByteArray()
+    }
+
+    fun valid(accountId: Long, otpRequest: OTPRequest): Boolean {
+        val secret = accountTokenRepository.findTokenByAccountId(accountId)
+        val otpCode = getTOTPCode(secret)
+        println(otpCode)
+        if (otpCode.equals(otpRequest.otpCode))
+            return true
+        throw InvalidOTPCodeException()
     }
 
     private fun getTOTPCode(secretKey: String?): String? {

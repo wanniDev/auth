@@ -12,6 +12,10 @@ class AccountTokenRepositoryAdapter(private val jpaAccountTokenRepository: JpaAc
         return jpaAccountTokenRepository.save(accountToken)
     }
 
+    override fun findTokenById(accountTokenId: Long): String {
+        return jpaAccountTokenRepository.findTokenById(accountTokenId) ?: throw NotFountAccountTokenException()
+    }
+
     override fun findByAccountId(accountId: Long): AccountToken {
         return jpaAccountTokenRepository.findByAccountId(accountId) ?: throw NotFountAccountTokenException()
     }
