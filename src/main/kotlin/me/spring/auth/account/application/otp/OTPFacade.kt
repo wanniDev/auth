@@ -5,5 +5,5 @@ import org.springframework.stereotype.Service
 
 @Service
 class OTPFacade(private val processor: OTPProcessor) {
-    fun processQRCode(authInfo: AuthInfo) = processor.supplyQRCode(authInfo)
+    fun processQRCode(authInfo: AuthInfo): ByteArray = processor.supplyQRCode(authInfo)
 }

@@ -21,7 +21,7 @@ class OTPProcessor(
                    private val accountRepository: AccountRepositoryAdapter,
                    private val accountTokenRepository: AccountTokenRepositoryAdapter
 ) {
-    fun supplyQRCode(authInfo: AuthInfo): String {
+    fun supplyQRCode(authInfo: AuthInfo): ByteArray {
         val secret: String
         val accountId = authInfo.id
         if (accountTokenRepository.existByAccountId(accountId)) {
@@ -32,14 +32,8 @@ class OTPProcessor(
             accountTokenRepository.save(AccountToken(account, secret))
         }
 
-        println(secret)
-
         val barCodeUrl = generateAuthBarCode(secret, issuer = "localhost", email = authInfo.email)
-        val qrCodeImage = generateQRImage(barCodeUrl, 400, 400)
-        val totpCode = getTOTPCode(secret)!!
-        // TODO OTP 응답 타입 고민해보기
-        println(totpCode)
-        return "hello"
+        return generateQRImage(barCodeUrl, 240, 240)
     }
 
     private fun generateQRImage(barCodeUrl: String, width: Int, height: Int): ByteArray {
