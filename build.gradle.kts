@@ -36,6 +36,12 @@ dependencies {
     implementation("com.google.zxing:javase:3.5.1")
     implementation("de.taimos:totp:1.0")
 
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+
+    implementation("org.webjars:jquery:3.3.1")
+
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")

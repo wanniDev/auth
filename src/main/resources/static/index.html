@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring Boot reCAPTCHA with AOP</title>
+    <head>
+        <title>Title</title>
+
+        <script src="https://www.google.com/recaptcha/api.js?render=6Lf2JhcjAAAAAHrQM60-AgKBZRmc6Ril7NYYMNLN"></script>
+        <script>
+            function reCapt() {
+                grecaptcha.ready(function() {
+                    grecaptcha.execute('6Lf2JhcjAAAAAHrQM60-AgKBZRmc6Ril7NYYMNLN', {action: 'submit'})
+                        .then(
+                            function(token) {
+                                let tokenTextArea = document.getElementById("token");
+                                tokenTextArea.value = token;
+                    });
+                });
+            }
+        </script>
+    </head>
+<body>
+
+<form action="/validation" method="post">
+    <button type="button" class="g-recaptcha" onclick="reCapt()">토큰받아옴</button>
+    <br>
+    <textarea type="text" id="token" name="token" value=""></textarea>
+    <br>
+    <button type="submit">제출</button>
+</form>
+
+</div>
+
+</body>
+</html>
