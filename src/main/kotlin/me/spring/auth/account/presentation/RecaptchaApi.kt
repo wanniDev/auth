@@ -1,6 +1,7 @@
 package me.spring.auth.account.presentation
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class RecaptchaApi() {
-    val SECRET_KEY = "6Lf2JhcjAAAAAAdtCu-P2b4R_y3BfdKPxqZro5-W"
+    @Value("\${google.recaptcha.secret}")
+    lateinit var SECRET_KEY: String
     val SITE_VERIFY_URL = "https://www.google.com/recaptcha/api/siteverify"
 
     @Autowired
